@@ -4,10 +4,11 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getProjectList } from './db/database';
+import { initDB, getProjectList, getLLMProvider, setLLMProvider } from './db/database';
 import { logger } from './logger';
 import { FileLogger } from './logger/file';
 import { DatabaseLogger } from './logger/db';
+import { AIProvider } from './ai_provider/types';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -50,6 +51,14 @@ app.on('ready', () => {
   // IPC Handler for DB
   ipcMain.handle('get-projects', async () => {
     return getProjectList();
+  });
+
+  ipcMain.handle('get-llm-provider', async () => {
+    return getLLMProvider();
+  });
+
+  ipcMain.handle('set-llm-provider', async (_, provider: AIProvider) => {
+    return setLLMProvider(provider);
   });
 
   createWindow();

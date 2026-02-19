@@ -136,6 +136,5 @@ export function getOpenAIModel() {
 export function getProjectList() {
     const db = getDB();
     const projects = db.prepare('SELECT * FROM projects').all() as { name: string }[];
-    logger.info(`Projects: ${JSON.stringify(projects)}`);
     return projects;
 }
