@@ -1,8 +1,100 @@
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+/* @tailwind base; */
+/* @tailwind components; */
+/* @tailwind utilities; */
+
+@layer base {
+  :root {
+    /* #EAEFEF - Main Background */
+    --background: 180 11% 93.7%;
+    /* #25343F - Main Text/Dark Elements */
+    --foreground: 205 26% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 205 26% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 205 26% 20%;
+
+    /* #25343F - Standard Buttons/Actions */
+    --primary: 205 26% 20%;
+    --primary-foreground: 180 11% 98%;
+
+    /* #BFC9D1 - Subtle Secondary Elements */
+    --secondary: 206 17% 78%;
+    --secondary-foreground: 205 26% 20%;
+
+    --muted: 206 17% 85%;
+    --muted-foreground: 205 26% 45%;
+
+    /* #FF9B51 - Brand Accent/Call to Action */
+    --accent: 25 100% 66%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* #BFC9D1 - Borders */
+    --border: 206 17% 78%;
+    --input: 206 17% 78%;
+    --ring: 25 100% 66%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 205 26% 10%;
+    --foreground: 180 11% 93.7%;
+
+    --card: 205 26% 15%;
+    --card-foreground: 180 11% 93.7%;
+
+    --popover: 205 26% 12%;
+    --popover-foreground: 180 11% 93.7%;
+
+    --primary: 180 11% 93.7%;
+    --primary-foreground: 205 26% 20%;
+
+    --secondary: 205 26% 25%;
+    --secondary-foreground: 180 11% 93.7%;
+
+    --muted: 205 26% 20%;
+    --muted-foreground: 206 17% 70%;
+
+    --accent: 25 100% 66%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 180 11% 98%;
+
+    --border: 205 26% 25%;
+    --input: 205 26% 25%;
+    --ring: 25 100% 66%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
 }
