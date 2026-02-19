@@ -42,7 +42,7 @@ export function initDB() {
 
     const seed = db.prepare('INSERT OR IGNORE INTO config (key, value) VALUES (?, ?)');
     seed.run('theme', 'dark');
-    seed.run('llm_provider', 'lm-studio');
+    seed.run('llm_provider', 'OpenAI');
 
     // const seedProject = db.prepare('INSERT OR IGNORE INTO projects (name) VALUES (?)');
     // seedProject.run('My New Flat');
@@ -92,35 +92,6 @@ export function setGoogleModel(model: string) {
 }
 
 
-
-export function getGoogleApiKey() {
-    const db = getDB();
-    const apiKey = db.prepare('SELECT value FROM config WHERE key = ?').get('google_api_key') as { value: string } | undefined;
-    return apiKey?.value;
-}
-
-export function setGoogleApiKey(apiKey: string) {
-    const db = getDB();
-    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
-    stmt.run('google_api_key', apiKey);
-}
-
-
-
-export function setOpenAIKey(key: string) {
-    const db = getDB();
-    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
-    stmt.run('openai_key', key);
-}
-
-export function getOpenAIKey() {
-    const db = getDB();
-    const apiKey = db.prepare('SELECT value FROM config WHERE key = ?').get('openai_key') as { value: string } | undefined;
-    return apiKey?.value;
-}
-
-
-
 export function setOpenAIModel(model: string) {
     const db = getDB();
     const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
@@ -131,6 +102,34 @@ export function getOpenAIModel() {
     const db = getDB();
     const model = db.prepare('SELECT value FROM config WHERE key = ?').get('openai_model') as { value: string } | undefined;
     return model?.value;
+}
+
+export function setLLMProviderBaseUrl(baseUrl: string) {
+    const db = getDB();
+    const llmProvider = getLLMProvider();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?,?)')
+    stmt.run(llmProvider + '_base_url', baseUrl);
+}
+
+export function getLLMProviderBaseUrl() {
+    const db = getDB();
+    const llmProvider = getLLMProvider();
+    const baseUrl = db.prepare('SELECT value FROM config WHERE key = ?').get(llmProvider + '_base_url') as { value: string } | undefined;
+    return baseUrl?.value;
+}
+
+export function setLLMProviderApiKey(apiKey: string) {
+    const db = getDB();
+    const llmProvider = getLLMProvider();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?,?)')
+    stmt.run(llmProvider + '_api_key', apiKey);
+}
+
+export function getLLMProviderApiKey() {
+    const db = getDB();
+    const llmProvider = getLLMProvider();
+    const apiKey = db.prepare('SELECT value FROM config WHERE key = ?').get(llmProvider + '_api_key') as { value: string } | undefined;
+    return apiKey?.value;
 }
 
 export function getProjectList() {

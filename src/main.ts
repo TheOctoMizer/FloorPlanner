@@ -4,7 +4,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getProjectList, getLLMProvider, setLLMProvider } from './db/database';
+import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey } from './db/database';
 import { logger } from './logger';
 import { FileLogger } from './logger/file';
 import { DatabaseLogger } from './logger/db';
@@ -59,6 +59,22 @@ app.on('ready', () => {
 
   ipcMain.handle('set-llm-provider', async (_, provider: AIProvider) => {
     return setLLMProvider(provider);
+  });
+
+  ipcMain.handle('get-llm-provider-base-url', async () => {
+    return getLLMProviderBaseUrl();
+  });
+
+  ipcMain.handle('set-llm-provider-base-url', async (_, baseUrl: string) => {
+    return setLLMProviderBaseUrl(baseUrl);
+  });
+
+  ipcMain.handle('get-llm-provider-api-key', async () => {
+    return getLLMProviderApiKey();
+  });
+
+  ipcMain.handle('set-llm-provider-api-key', async (_, apiKey: string) => {
+    return setLLMProviderApiKey(apiKey);
   });
 
   createWindow();
