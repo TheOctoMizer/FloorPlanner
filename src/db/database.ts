@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import path from "path";
 import { app } from "electron";
 import fs from "fs";
+import { logger } from "../logger";
 
 let db: Database.Database;
 
@@ -10,7 +11,7 @@ export function initDB() {
     const dbDir = path.join(userDataPath, "db");
     const dbPath = path.join(dbDir, "floorplanner.db");
 
-    console.log(`Initializing DB at: ${dbPath}`);
+    logger.info(`Initializing DB at: ${dbPath}`);
 
     if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir);
@@ -52,4 +53,74 @@ export function setConfig(key: string, value: string) {
 
 export function getDB() {
     return db;
+}
+
+
+
+export function getLLMProvider() {
+    const db = getDB();
+    const provider = db.prepare('SELECT value FROM config WHERE key = ?').get('llm_provider') as { value: string } | undefined;
+    return provider?.value;
+}
+
+export function setLLMProvider(provider: string) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
+    stmt.run('llm_provider', provider);
+}
+
+
+
+export function getGoogleModel() {
+    const db = getDB();
+    const model = db.prepare('SELECT value FROM config WHERE key = ?').get('google_model') as { value: string } | undefined;
+    return model?.value;
+}
+
+export function setGoogleModel(model: string) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
+    stmt.run('google_model', model);
+}
+
+
+
+export function getGoogleApiKey() {
+    const db = getDB();
+    const apiKey = db.prepare('SELECT value FROM config WHERE key = ?').get('google_api_key') as { value: string } | undefined;
+    return apiKey?.value;
+}
+
+export function setGoogleApiKey(apiKey: string) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
+    stmt.run('google_api_key', apiKey);
+}
+
+
+
+export function setOpenAIKey(key: string) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
+    stmt.run('openai_key', key);
+}
+
+export function getOpenAIKey() {
+    const db = getDB();
+    const apiKey = db.prepare('SELECT value FROM config WHERE key = ?').get('openai_key') as { value: string } | undefined;
+    return apiKey?.value;
+}
+
+
+
+export function setOpenAIModel(model: string) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
+    stmt.run('openai_model', model);
+}
+
+export function getOpenAIModel() {
+    const db = getDB();
+    const model = db.prepare('SELECT value FROM config WHERE key = ?').get('openai_model') as { value: string } | undefined;
+    return model?.value;
 }

@@ -17,6 +17,7 @@ export class FileLogger implements LogStrategy {
         }
 
         this.stream = fs.createWriteStream(logFile, { flags: 'a' });
+        this.log('info', `File Logger initialized. Logs are being written to: ${logFile}`);
     }
 
     log(level: LogLevel, message: string) {

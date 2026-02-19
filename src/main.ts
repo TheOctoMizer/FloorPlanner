@@ -2,6 +2,9 @@ import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { initDB, getConfig, setConfig } from './db/database';
+import { logger } from './logger';
+import { FileLogger } from './logger/file';
+import { DatabaseLogger } from './logger/db';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -35,7 +38,14 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  // Add FileLogger first so it can capture logs from initialization
+  logger.addStrategy(new FileLogger());
+
   initDB();
+
+  // Add DatabaseLogger after initDB is called to ensure the database is ready
+  logger.addStrategy(new DatabaseLogger());
+  logger.success(`Application launched at ${new Date().toISOString()}`);
   createWindow();
 });
 
