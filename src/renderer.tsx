@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./ui/App";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
     <React.StrictMode>
-        <h1>Linguistic Floor Planner</h1>
+        <App />
     </React.StrictMode>
 );
