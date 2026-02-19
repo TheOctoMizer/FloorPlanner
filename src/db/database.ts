@@ -31,6 +31,11 @@ export function initDB() {
       level TEXT NOT NULL,
       message TEXT NOT NULL,
       timestamp TEXT NOT NULL
+    );`,
+        `CREATE TABLE IF NOT EXISTS projects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );`
     ];
     db.exec(createTableStatements.join('\n'));
@@ -38,6 +43,9 @@ export function initDB() {
     const seed = db.prepare('INSERT OR IGNORE INTO config (key, value) VALUES (?, ?)');
     seed.run('theme', 'dark');
     seed.run('llm_provider', 'lm-studio');
+
+    // const seedProject = db.prepare('INSERT OR IGNORE INTO projects (name) VALUES (?)');
+    // seedProject.run('My New Flat');
 }
 
 export function getConfig(key: string): string | undefined {
@@ -123,4 +131,11 @@ export function getOpenAIModel() {
     const db = getDB();
     const model = db.prepare('SELECT value FROM config WHERE key = ?').get('openai_model') as { value: string } | undefined;
     return model?.value;
+}
+
+export function getProjectList() {
+    const db = getDB();
+    const projects = db.prepare('SELECT * FROM projects').all() as { name: string }[];
+    logger.info(`Projects: ${JSON.stringify(projects)}`);
+    return projects;
 }
