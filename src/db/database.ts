@@ -20,13 +20,19 @@ export function initDB() {
 
     db.pragma('journal_mode = WAL');
 
-    const createTable = `
-    CREATE TABLE IF NOT EXISTS config (
+    const createTableStatements = [
+        `CREATE TABLE IF NOT EXISTS config (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
-    );
-  `;
-    db.exec(createTable);
+    );`,
+        `CREATE TABLE IF NOT EXISTS logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      level TEXT NOT NULL,
+      message TEXT NOT NULL,
+      timestamp TEXT NOT NULL
+    );`
+    ];
+    db.exec(createTableStatements.join('\n'));
 
     const seed = db.prepare('INSERT OR IGNORE INTO config (key, value) VALUES (?, ?)');
     seed.run('theme', 'dark');
@@ -42,4 +48,8 @@ export function getConfig(key: string): string | undefined {
 export function setConfig(key: string, value: string) {
     const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)');
     stmt.run(key, value);
+}
+
+export function getDB() {
+    return db;
 }
