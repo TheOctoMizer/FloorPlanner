@@ -1,7 +1,10 @@
-import { app, BrowserWindow } from 'electron';
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
+declare const MAIN_WINDOW_VITE_NAME: string;
+
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getConfig, setConfig } from './db/database';
+import { initDB, getProjectList } from './db/database';
 import { logger } from './logger';
 import { FileLogger } from './logger/file';
 import { DatabaseLogger } from './logger/db';
@@ -18,6 +21,8 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
 
@@ -34,24 +39,22 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  // Add FileLogger first so it can capture logs from initialization
   logger.addStrategy(new FileLogger());
 
   initDB();
 
-  // Add DatabaseLogger after initDB is called to ensure the database is ready
   logger.addStrategy(new DatabaseLogger());
   logger.success(`Application launched at ${new Date().toISOString()}`);
+
+  // IPC Handler for DB
+  ipcMain.handle('get-projects', async () => {
+    return getProjectList();
+  });
+
   createWindow();
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
@@ -59,12 +62,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
