@@ -3,6 +3,7 @@ import path from "path";
 import { app } from "electron";
 import fs from "fs";
 import { logger } from "../logger";
+import { ThemeType } from "../types/themeType";
 
 let db: Database.Database;
 
@@ -136,4 +137,16 @@ export function getProjectList() {
     const db = getDB();
     const projects = db.prepare('SELECT * FROM projects').all() as { name: string }[];
     return projects;
+}
+
+export function getTheme() {
+    const db = getDB();
+    const theme = db.prepare('SELECT value FROM config WHERE key = ?').get('theme') as { value: ThemeType } | undefined;
+    return theme?.value;
+}
+
+export function setTheme(theme: ThemeType) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?,?)')
+    stmt.run('theme', theme);
 }

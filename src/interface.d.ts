@@ -1,4 +1,5 @@
 import { AIProvider } from "./ai_provider/types";
+import { ThemeType } from "./types/themeType";
 
 export interface IElectronAPI {
     getProjects: () => Promise<{ name: string }[]>;
@@ -8,6 +9,8 @@ export interface IElectronAPI {
     setLLMProviderBaseUrl: (baseUrl: string) => Promise<void>;
     getLLMProviderApiKey: () => Promise<string>;
     setLLMProviderApiKey: (apiKey: string) => Promise<void>;
+    getTheme: () => Promise<ThemeType>;
+    setTheme: (theme: ThemeType) => Promise<void>;
 }
 
 declare global {

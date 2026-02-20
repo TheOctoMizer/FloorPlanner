@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { ThemeType } from "@/types/themeType";
 
 interface SettingsProps {
     open: boolean;
@@ -31,6 +32,8 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
     const [baseUrl, setBaseUrl] = useState<string>("");
     const [apiKey, setApiKey] = useState<string>("");
     const [showApiKey, setShowApiKey] = useState(false);
+    const [theme, setTheme] = useState<ThemeType | string>("");
+
 
     useEffect(() => {
         if (open) {
@@ -38,9 +41,11 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
                 const provider = await window.api.getLLMProvider();
                 const baseUrl = await window.api.getLLMProviderBaseUrl();
                 const apiKey = await window.api.getLLMProviderApiKey();
+                const theme = await window.api.getTheme();
                 setAiProvider(provider);
                 setBaseUrl(baseUrl || "");
                 setApiKey(apiKey || "");
+                setTheme(theme);
             };
             fetchProvider();
         }
@@ -72,6 +77,14 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
         });
     };
 
+    const handleThemeChange = async (value: string) => {
+        setTheme(value);
+        await window.api.setTheme(value as ThemeType);
+        toast.success(`Theme updated to ${value}`, {
+            description: "Your settings have been saved successfully.",
+        });
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
@@ -82,6 +95,28 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                    <div className="flex flex-col gap-6">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium leading-none flex items-center gap-2">
+                                Theme
+                            </label>
+                            <Select
+                                value={theme}
+                                onValueChange={handleThemeChange}
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select Theme" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.values(ThemeType).map((theme) => (
+                                        <SelectItem key={theme} value={theme}>
+                                            {theme}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
                     <div className="flex flex-col gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-medium leading-none flex items-center gap-2">

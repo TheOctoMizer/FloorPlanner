@@ -4,11 +4,12 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey } from './db/database';
+import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey, getTheme, setTheme } from './db/database';
 import { logger } from './logger';
 import { FileLogger } from './logger/file';
 import { DatabaseLogger } from './logger/db';
 import { AIProvider } from './ai_provider/types';
+import { ThemeType } from './types/themeType';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -75,6 +76,14 @@ app.on('ready', () => {
 
   ipcMain.handle('set-llm-provider-api-key', async (_, apiKey: string) => {
     return setLLMProviderApiKey(apiKey);
+  });
+
+  ipcMain.handle('get-theme', async () => {
+    return getTheme();
+  });
+
+  ipcMain.handle('set-theme', async (_, theme: ThemeType) => {
+    return setTheme(theme);
   });
 
   createWindow();

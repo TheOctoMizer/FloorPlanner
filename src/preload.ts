@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { ThemeType } from './types/themeType';
 
 contextBridge.exposeInMainWorld('api', {
     getProjects: () => ipcRenderer.invoke('get-projects'),
@@ -8,4 +9,6 @@ contextBridge.exposeInMainWorld('api', {
     setLLMProviderBaseUrl: (baseUrl: string) => ipcRenderer.invoke('set-llm-provider-base-url', baseUrl),
     getLLMProviderApiKey: () => ipcRenderer.invoke('get-llm-provider-api-key'),
     setLLMProviderApiKey: (apiKey: string) => ipcRenderer.invoke('set-llm-provider-api-key', apiKey),
+    getTheme: () => ipcRenderer.invoke('get-theme'),
+    setTheme: (theme: ThemeType) => ipcRenderer.invoke('set-theme', theme),
 });
