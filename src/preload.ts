@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld('api', {
     setLLMProviderApiKey: (apiKey: string) => ipcRenderer.invoke('set-llm-provider-api-key', apiKey),
     getTheme: () => ipcRenderer.invoke('get-theme'),
     setTheme: (theme: ThemeType) => ipcRenderer.invoke('set-theme', theme),
+    createProject: (name: string) => ipcRenderer.invoke('create-project', name),
+    deleteProject: (id: number) => ipcRenderer.invoke('delete-project', id),
 });

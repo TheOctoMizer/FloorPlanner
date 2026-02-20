@@ -7,13 +7,15 @@ import RecentProjectsCard from "./RecentProjectsCard";
 import NewProjectCard from "./NewProjectCard";
 
 export default function ProjectSelector() {
-    const [projects, setProjects] = useState<{ name: string }[]>([]);
+    const [projects, setProjects] = useState<{ id: number, name: string }[]>([]);
+
+
+    const fetchProjects = async () => {
+        const list = await window.api.getProjects();
+        setProjects(list);
+    };
 
     useEffect(() => {
-        const fetchProjects = async () => {
-            const list = await window.api.getProjects();
-            setProjects(list);
-        };
         fetchProjects();
     }, []);
 
@@ -23,11 +25,12 @@ export default function ProjectSelector() {
                 <ProjectTitleCard />
                 <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row gap-8 items-stretch">
-                        <RecentProjectsCard projects={projects} />
+                        <RecentProjectsCard projects={projects} onRefresh={fetchProjects} />
 
                         <div className="hidden md:block w-[1px] bg-gradient-to-b from-transparent via-border to-transparent" />
 
-                        <NewProjectCard />
+                        <NewProjectCard onRefresh={fetchProjects} />
+
                     </div>
                 </CardContent>
             </Card>

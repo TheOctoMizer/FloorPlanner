@@ -135,7 +135,7 @@ export function getLLMProviderApiKey() {
 
 export function getProjectList() {
     const db = getDB();
-    const projects = db.prepare('SELECT * FROM projects').all() as { name: string }[];
+    const projects = db.prepare('SELECT id, name FROM projects').all() as { id: number, name: string }[];
     return projects;
 }
 
@@ -158,6 +158,13 @@ export function createProject(name: string) {
     const stmt = db.prepare('INSERT INTO projects (name) VALUES (?)');
     stmt.run(sanitizedName);
 }
+
+export function deleteProject(id: number) {
+    const db = getDB();
+    const stmt = db.prepare('DELETE FROM projects WHERE id = ?');
+    stmt.run(id);
+}
+
 
 export function getTheme() {
     const db = getDB();

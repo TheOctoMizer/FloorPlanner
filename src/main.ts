@@ -4,7 +4,8 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey, getTheme, setTheme } from './db/database';
+import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey, getTheme, setTheme, createProject, deleteProject } from './db/database';
+
 import { logger } from './logger';
 import { FileLogger } from './logger/file';
 import { DatabaseLogger } from './logger/db';
@@ -85,6 +86,15 @@ app.on('ready', () => {
   ipcMain.handle('set-theme', async (_, theme: ThemeType) => {
     return setTheme(theme);
   });
+
+  ipcMain.handle('create-project', async (_, name: string) => {
+    return createProject(name);
+  });
+
+  ipcMain.handle('delete-project', async (_, id: number) => {
+    return deleteProject(id);
+  });
+
 
   createWindow();
 });
