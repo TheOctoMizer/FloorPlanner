@@ -155,9 +155,15 @@ export function createProject(name: string) {
     // remove stray spaces - end and beginning
     sanitizedName = sanitizedName.replace(/^\s+/, "");
     sanitizedName = sanitizedName.replace(/\s+$/, "");
+    // All lower case
+    sanitizedName = sanitizedName.toLowerCase();
+    // names should be in kebab case
+    sanitizedName = sanitizedName.replace(/_/g, "-");
     const stmt = db.prepare('INSERT INTO projects (name) VALUES (?)');
-    stmt.run(sanitizedName);
+    const result = stmt.run(sanitizedName);
+    return { id: Number(result.lastInsertRowid), name: sanitizedName };
 }
+
 
 export function deleteProject(id: number) {
     const db = getDB();
@@ -177,3 +183,4 @@ export function setTheme(theme: ThemeType) {
     const stmt = db.prepare('INSERT OR REPLACE INTO config (key, value) VALUES (?,?)')
     stmt.run('theme', theme);
 }
+

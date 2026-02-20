@@ -12,7 +12,8 @@ export interface IElectronAPI {
     setLLMProviderApiKey: (apiKey: string) => Promise<void>;
     getTheme: () => Promise<ThemeType>;
     setTheme: (theme: ThemeType) => Promise<void>;
-    createProject: (name: string) => Promise<void>;
+    createProject: (name: string) => Promise<{ id: number, name: string }>;
+
     deleteProject: (id: number) => Promise<void>;
 }
 

@@ -2,11 +2,20 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Folder, Trash } from "lucide-react";
 
-export default function RecentProjectsCard({ projects, onRefresh }: { projects: { id: number, name: string }[], onRefresh: () => void }) {
+import { Project } from "../../App";
+
+interface RecentProjectsCardProps {
+    projects: Project[];
+    onRefresh: () => void;
+    onSelectProject: (project: Project) => void;
+}
+
+export default function RecentProjectsCard({ projects, onRefresh, onSelectProject }: RecentProjectsCardProps) {
     const handleDelete = async (id: number) => {
         await window.api.deleteProject(id);
         onRefresh();
     };
+
 
     return (
 
@@ -20,8 +29,9 @@ export default function RecentProjectsCard({ projects, onRefresh }: { projects: 
                         <div
                             key={index}
                             className="w-full flex items-center justify-between gap-3 p-2 rounded-md bg-secondary text-secondary-foreground font-medium hover:bg-accent hover:text-accent-foreground group transition-all duration-200 border border-transparent hover:border-border/50 cursor-pointer"
-                            onClick={() => console.log(`Project selected with Index ${index}`)}
+                            onClick={() => onSelectProject(project)}
                         >
+
                             <div className="flex items-center gap-3 overflow-hidden">
                                 <Folder className="h-4 w-4 text-accent group-hover:text-accent-foreground shrink-0 transition-colors" />
                                 <span className="truncate">{project.name}</span>

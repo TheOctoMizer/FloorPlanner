@@ -3,17 +3,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function CreateProject({ open, onOpenChange, onRefresh }: { open: boolean, onOpenChange: (open: boolean) => void, onRefresh: () => void }) {
+import { Project } from "../../App";
+
+export default function CreateProject({ open, onOpenChange, onRefresh, onSelectProject }: { open: boolean, onOpenChange: (open: boolean) => void, onRefresh: () => void, onSelectProject: (project: Project) => void }) {
     const [projectName, setProjectName] = useState<string>("");
     const [folderPath, setFolderPath] = useState<string>("");
 
     const handleCreate = async () => {
         if (!projectName.trim()) return;
-        await window.api.createProject(projectName);
+        const project = await window.api.createProject(projectName);
         setProjectName("");
         onRefresh();
         onOpenChange(false);
+        onSelectProject(project);
     };
+
 
 
     return (

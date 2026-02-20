@@ -1,19 +1,35 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Settings as SettingsIcon } from "lucide-react";
+import { Settings as SettingsIcon, ChevronLeft } from "lucide-react";
 import SettingsModal from "../Settings";
 
+interface HeaderProps {
+    onBack?: () => void;
+    showBack?: boolean;
+}
 
-export default function Header() {
+export default function Header({ onBack, showBack }: HeaderProps) {
     const [open, setOpen] = React.useState(false);
+
 
     return (
         <header className="border-b bg-card">
             <div className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
+                        {showBack && onBack && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-accent transition-colors"
+                                onClick={onBack}
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </Button>
+                        )}
                         <span className="text-xl font-bold text-foreground">Floor Planner</span>
                     </div>
+
                     {/* Settings button */}
                     <Button
                         variant="ghost"

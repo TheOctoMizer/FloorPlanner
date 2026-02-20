@@ -6,8 +6,15 @@ import ProjectTitleCard from "./ProjectTitleCard";
 import RecentProjectsCard from "./RecentProjectsCard";
 import NewProjectCard from "./NewProjectCard";
 
-export default function ProjectSelector() {
-    const [projects, setProjects] = useState<{ id: number, name: string }[]>([]);
+import { Project } from "../../App";
+
+interface ProjectSelectorProps {
+    onSelectProject: (project: Project) => void;
+}
+
+export default function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
+    const [projects, setProjects] = useState<Project[]>([]);
+
 
 
     const fetchProjects = async () => {
@@ -25,11 +32,19 @@ export default function ProjectSelector() {
                 <ProjectTitleCard />
                 <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row gap-8 items-stretch">
-                        <RecentProjectsCard projects={projects} onRefresh={fetchProjects} />
+                        <RecentProjectsCard
+                            projects={projects}
+                            onRefresh={fetchProjects}
+                            onSelectProject={onSelectProject}
+                        />
 
                         <div className="hidden md:block w-[1px] bg-gradient-to-b from-transparent via-border to-transparent" />
 
-                        <NewProjectCard onRefresh={fetchProjects} />
+                        <NewProjectCard
+                            onRefresh={fetchProjects}
+                            onSelectProject={onSelectProject}
+                        />
+
 
                     </div>
                 </CardContent>

@@ -3,7 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import CreateProject from "../CreateProject";
 
-export default function NewProjectCard({ onRefresh }: { onRefresh: () => void }) {
+import { Project } from "../../App";
+
+interface NewProjectCardProps {
+    onRefresh: () => void;
+    onSelectProject: (project: Project) => void;
+}
+
+export default function NewProjectCard({ onRefresh, onSelectProject }: NewProjectCardProps) {
+
 
     const [open, setOpen] = useState(false);
 
@@ -32,7 +40,8 @@ export default function NewProjectCard({ onRefresh }: { onRefresh: () => void })
             <p className="text-xs text-muted-foreground text-center px-4">
                 Start from scratch or import an existing floor plan image.
             </p>
-            <CreateProject open={open} onOpenChange={handleClose} onRefresh={onRefresh} />
+            <CreateProject open={open} onOpenChange={handleClose} onRefresh={onRefresh} onSelectProject={onSelectProject} />
+
 
         </div>
     )
