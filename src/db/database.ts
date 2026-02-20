@@ -139,6 +139,26 @@ export function getProjectList() {
     return projects;
 }
 
+export function createProject(name: string) {
+    const db = getDB();
+    // sanitized project names to prevent sql injection
+    let sanitizedName = name.replace(/'/g, "''");
+    // replace spaces with underscores
+    sanitizedName = sanitizedName.replace(/ /g, "_");
+    // replace special characters with underscores
+    sanitizedName = sanitizedName.replace(/[^a-zA-Z0-9_]/g, "_");
+    // replace multiple underscores with a single underscore
+    sanitizedName = sanitizedName.replace(/_+/g, "_");
+    // remove leading and trailing underscores
+    sanitizedName = sanitizedName.replace(/^_/, "");
+    sanitizedName = sanitizedName.replace(/_$/, "");
+    // remove stray spaces - end and beginning
+    sanitizedName = sanitizedName.replace(/^\s+/, "");
+    sanitizedName = sanitizedName.replace(/\s+$/, "");
+    const stmt = db.prepare('INSERT INTO projects (name) VALUES (?)');
+    stmt.run(sanitizedName);
+}
+
 export function getTheme() {
     const db = getDB();
     const theme = db.prepare('SELECT value FROM config WHERE key = ?').get('theme') as { value: ThemeType } | undefined;
