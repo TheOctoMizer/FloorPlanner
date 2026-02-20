@@ -13,7 +13,7 @@ export default function FloorPlanner({ project }: { project: Project }) {
                     {project.name}
                 </h2>
             </div>
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex overflow-hidden bg-checkerboard-subtle">
                 <ChatComponent />
                 <DesignCanvas />
             </div>
