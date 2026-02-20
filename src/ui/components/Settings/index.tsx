@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { ThemeType } from "@/types/themeType";
+import { useTheme } from "../ThemeProvider";
 
 interface SettingsProps {
     open: boolean;
@@ -32,22 +33,20 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
     const [baseUrl, setBaseUrl] = useState<string>("");
     const [apiKey, setApiKey] = useState<string>("");
     const [showApiKey, setShowApiKey] = useState(false);
-    const [theme, setTheme] = useState<ThemeType | string>("");
+    const { theme, setTheme } = useTheme();
 
 
     useEffect(() => {
         if (open) {
-            const fetchProvider = async () => {
+            const fetchProviderData = async () => {
                 const provider = await window.api.getLLMProvider();
                 const baseUrl = await window.api.getLLMProviderBaseUrl();
                 const apiKey = await window.api.getLLMProviderApiKey();
-                const theme = await window.api.getTheme();
                 setAiProvider(provider);
                 setBaseUrl(baseUrl || "");
                 setApiKey(apiKey || "");
-                setTheme(theme);
             };
-            fetchProvider();
+            fetchProviderData();
         }
     }, [open]);
 
@@ -58,9 +57,11 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
             description: "Your settings have been saved successfully.",
         });
 
-        // Refresh base URL if needed for the new provider
+        // Refresh base URL and Key for the new provider
         const newBaseUrl = await window.api.getLLMProviderBaseUrl();
+        const newApiKey = await window.api.getLLMProviderApiKey();
         setBaseUrl(newBaseUrl || "");
+        setApiKey(newApiKey || "");
     };
 
     const handleSaveBaseUrl = async () => {
@@ -78,12 +79,12 @@ export default function Settings({ open, onOpenChange }: SettingsProps) {
     };
 
     const handleThemeChange = async (value: string) => {
-        setTheme(value);
-        await window.api.setTheme(value as ThemeType);
+        setTheme(value as ThemeType);
         toast.success(`Theme updated to ${value}`, {
             description: "Your settings have been saved successfully.",
         });
     };
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
