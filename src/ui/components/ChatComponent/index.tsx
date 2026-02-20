@@ -2,7 +2,8 @@ import React from "react";
 
 export default function ChatComponent() {
     return (
-        <div className="w-80 border-r bg-transparent flex flex-col h-full">
+        <div className="w-80 border-r bg-background/50 backdrop-blur-sm flex flex-col h-full bg-checkerboard-subtle">
+
             <div className="p-4 border-b font-medium">AI Assistant</div>
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
                 <div className="bg-muted px-3 py-2 rounded-lg text-sm max-w-[80%]">
