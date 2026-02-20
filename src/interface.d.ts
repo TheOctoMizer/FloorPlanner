@@ -15,7 +15,9 @@ export interface IElectronAPI {
     createProject: (name: string) => Promise<{ id: number, name: string }>;
 
     deleteProject: (id: number) => Promise<void>;
+    getProjectById: (id: number) => Promise<{ id: number, name: string } | undefined>;
 }
+
 
 declare global {
     interface Window {

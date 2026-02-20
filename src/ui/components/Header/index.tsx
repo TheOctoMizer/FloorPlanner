@@ -6,15 +6,17 @@ import SettingsModal from "../Settings";
 interface HeaderProps {
     onBack?: () => void;
     showBack?: boolean;
+    title?: string;
 }
 
-export default function Header({ onBack, showBack }: HeaderProps) {
+export default function Header({ onBack, showBack, title }: HeaderProps) {
     const [open, setOpen] = React.useState(false);
+
 
 
     return (
         <header className="border-b bg-card">
-            <div className="container mx-auto px-4 py-4">
+            <div className="container mx-auto px-2 py-2">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         {showBack && onBack && (
@@ -27,7 +29,10 @@ export default function Header({ onBack, showBack }: HeaderProps) {
                                 <ChevronLeft className="h-5 w-5" />
                             </Button>
                         )}
-                        <span className="text-xl font-bold text-foreground">Floor Planner</span>
+                        <span className="text-xl font-bold text-foreground transition-all duration-300">
+                            {title || "Floor Planner"}
+                        </span>
+
                     </div>
 
                     {/* Settings button */}

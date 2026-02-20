@@ -13,4 +13,6 @@ contextBridge.exposeInMainWorld('api', {
     setTheme: (theme: ThemeType) => ipcRenderer.invoke('set-theme', theme),
     createProject: (name: string) => ipcRenderer.invoke('create-project', name),
     deleteProject: (id: number) => ipcRenderer.invoke('delete-project', id),
+    getProjectById: (id: number) => ipcRenderer.invoke('get-project-by-id', id),
 });
+

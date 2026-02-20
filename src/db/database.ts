@@ -139,6 +139,13 @@ export function getProjectList() {
     return projects;
 }
 
+export function getProjectById(id: number) {
+    const db = getDB();
+    const project = db.prepare('SELECT id, name FROM projects WHERE id = ?').get(id) as { id: number, name: string } | undefined;
+    return project;
+}
+
+
 export function createProject(name: string) {
     const db = getDB();
     // sanitized project names to prevent sql injection
