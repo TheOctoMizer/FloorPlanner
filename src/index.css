@@ -104,3 +104,12 @@
     radial-gradient(circle, hsl(var(--foreground) / 0.07) 1px, transparent 1px);
   background-size: 16px 16px;
 }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
