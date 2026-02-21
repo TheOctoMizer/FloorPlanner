@@ -62,7 +62,7 @@ export default function BabylonCanvas() {
         let lastPointerPos = { x: 0, y: 0 };
 
         const onPointerDown = (event: PointerEvent) => {
-            if (event.button === 2) { // Right click
+            if (event.button === 0) { // Left click
                 isPanning = true;
                 lastPointerPos = { x: event.clientX, y: event.clientY };
                 if (canvasRef.current) canvasRef.current.style.cursor = 'grabbing';
@@ -76,8 +76,8 @@ export default function BabylonCanvas() {
 
                 const sensitivity = (orthoSize * 2) / canvasRef.current.clientHeight;
 
-                camera.position.x -= deltaX * sensitivity;
-                camera.position.z += deltaY * sensitivity;
+                camera.position.x += deltaX * sensitivity;
+                camera.position.z -= deltaY * sensitivity;
 
                 lastPointerPos = { x: event.clientX, y: event.clientY };
             }
