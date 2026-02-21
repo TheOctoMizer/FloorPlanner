@@ -17,7 +17,7 @@ export default function BabylonCanvas() {
         const scene = new BABYLON.Scene(engine);
 
         // Transparent background to show the grid pattern underneath
-        scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
+        scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
 
         // Setup a 2D Orthographic Camera
         const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 50, 0), scene);
@@ -107,14 +107,19 @@ export default function BabylonCanvas() {
                 for (let z = -size; z <= size; z += step) {
                     const isMajor = x % 5 === 0 && z % 5 === 0;
 
-                    // Each dot is a tiny line segment to make it visible across engines
-                    const tiny = 0.02;
+                    // Each dot is a tiny cross (+) to make it visible across zoom levels
+                    const tiny = 0.03;
                     points.push([
                         new BABYLON.Vector3(x - tiny, 0, z),
                         new BABYLON.Vector3(x + tiny, 0, z)
                     ]);
+                    points.push([
+                        new BABYLON.Vector3(x, 0, z - tiny),
+                        new BABYLON.Vector3(x, 0, z + tiny)
+                    ]);
 
                     const color = isMajor ? majorDotColor : dotColor;
+                    colors.push([color, color]);
                     colors.push([color, color]);
                 }
             }
