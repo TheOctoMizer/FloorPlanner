@@ -8,7 +8,7 @@ export default function FloorPlanner({ project }: { project: Project }) {
     return (
         <div className="flex flex-col h-[calc(100vh-50px)]">
             <div className="flex-1 flex overflow-hidden">
-                <ChatComponent />
+                <ChatComponent projectId={project.id} />
                 <DesignCanvas />
             </div>
         </div>

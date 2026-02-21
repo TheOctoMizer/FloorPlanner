@@ -4,31 +4,32 @@ import { ChevronRight, Maximize2 } from "lucide-react";
 import ExpandedTextComponent from "./ExpandedTextComponent";
 import MessageComponent from "./MessageComponent";
 
-export default function ChatComponent() {
+interface ChatMessage {
+    message: string;
+    isUser: boolean;
+    isDesign: boolean;
+    timestamp: string;
+}
+
+export default function ChatComponent({ projectId }: { projectId: number }) {
     const [message, setMessage] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
     const [showExpand, setShowExpand] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const [chatHistory, setChatHistory] = useState([
-        {
-            message: "Hello! I'm your AI assistant. How can I help you design your floor plan today?",
-            isUser: false,
-            isDesign: false,
-            timestamp: "Fri • 12:00 PM",
-        },
-        {
-            message: "I want to design a building with 4 floors.\nGround floor should be a parking lot. Second floor should be a gym. Third floor should be a restaurant. Fourth floor should be a hotel.",
-            isUser: true,
-            isDesign: false,
-            timestamp: "Fri • 12:00 PM",
-        },
-        {
-            message: "Certainly! Here's a design concept for an empty, four-story building with the following details:\n\n**Flooring Dimensions:** 10m x 10m\n\n**Ground Floor:** Parking Lot\n\n**Second Floor:** Reception Area & Gym Space\n\n**Third Floor:** Restaurant (Dining Area & Kitchen)\n\n**Fourth Floor:** Hotel (Lobby & Rooms)",
-            isDesign: true,
-            isUser: false,
-            timestamp: "Fri • 12:01 PM",
-        },
-    ]);
+    const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+
+    // Fetch chat history from DB when project changes
+    useEffect(() => {
+        const fetchHistory = async () => {
+            try {
+                const history = await window.api.getChatHistory(projectId);
+                setChatHistory(history);
+            } catch (error) {
+                console.error("Failed to fetch chat history:", error);
+            }
+        };
+        fetchHistory();
+    }, [projectId]);
 
     // Auto-expand textarea height based on content
     useEffect(() => {
@@ -42,13 +43,50 @@ export default function ChatComponent() {
         }
     }, [message]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (message.trim()) {
-            // Send logic would go here
-            console.log("Sending:", message);
-            setChatHistory((prev) => [...prev, { message, isUser: true, isDesign: false, timestamp: new Date().toLocaleString() }]);
+            const userMsg: ChatMessage = {
+                message: message.trim(),
+                isUser: true,
+                isDesign: false,
+                timestamp: new Date().toISOString()
+            };
+
+            // 1. Optimistically update UI
+            setChatHistory((prev) => [...prev, userMsg]);
             setMessage("");
             setIsExpanded(false);
+
+            try {
+                // 2. Persist user message to DB
+                await window.api.addChatMessage(
+                    projectId,
+                    userMsg.message,
+                    userMsg.isUser,
+                    userMsg.isDesign
+                );
+
+                // 3. Simulate AI response (temporary check, this would normally come from your AI logic)
+                setTimeout(async () => {
+                    const aiMsg: ChatMessage = {
+                        message: "I've received your request! I'm processing the design now...",
+                        isUser: false,
+                        isDesign: false,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    setChatHistory((prev) => [...prev, aiMsg]);
+                    await window.api.addChatMessage(
+                        projectId,
+                        aiMsg.message,
+                        aiMsg.isUser,
+                        aiMsg.isDesign
+                    );
+                }, 1000);
+
+            } catch (error) {
+                console.error("Failed to save message:", error);
+            }
         }
     };
 
@@ -62,15 +100,15 @@ export default function ChatComponent() {
     return (
         <div className="w-80 border-r bg-background/50 backdrop-blur-md flex flex-col h-full bg-checkerboard-subtle shadow-2xl relative">
             {/* Header */}
-            <div className="p-4 border-b bg-background/40 backdrop-blur-lg flex items-center justify-between">
+            {/* <div className="p-4 border-b bg-background/40 backdrop-blur-lg flex items-center justify-between">
                 <div>
                     <h2 className="text-sm font-semibold tracking-tight">AI Assistant</h2>
                     <p className="text-[10px] text-muted-foreground font-medium">Ready to design</p>
-                </div>
+                </div> 
                 <div className="flex gap-1">
                     <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                 </div>
-            </div>
+            </div>  */}
 
             {/* Chat List */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-none scroll-smooth">
