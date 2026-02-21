@@ -19,7 +19,7 @@ export default function ChatComponent() {
             isUser: true,
         },
         {
-            message: "Sure! I'll design an empty building with 4 floors.\n• Our Ground floor will be a parking lot.\n• Second floor will have a reception area, and an empty space for the Gym section.\n• Third floor will have a restaurant with a dining area and a kitchen.\n• Fourth floor will have a hotel with a lobby and a few rooms.",
+            message: "Certainly! Here's a design concept for an empty, four-story building with the following details:\n\n**Flooring Dimensions:** 10m x 10m\n\n**Ground Floor:** Parking Lot\n\n**Second Floor:** Reception Area & Gym Space\n\n**Third Floor:** Restaurant (Dining Area & Kitchen)\n\n**Fourth Floor:** Hotel (Lobby & Rooms)",
             isDesign: true,
             isUser: false,
         },
