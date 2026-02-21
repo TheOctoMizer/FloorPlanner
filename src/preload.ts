@@ -14,5 +14,7 @@ contextBridge.exposeInMainWorld('api', {
     createProject: (name: string) => ipcRenderer.invoke('create-project', name),
     deleteProject: (id: number) => ipcRenderer.invoke('delete-project', id),
     getProjectById: (id: number) => ipcRenderer.invoke('get-project-by-id', id),
+    getChatHistory: (projectId: number) => ipcRenderer.invoke('get-chat-history', projectId),
+    addChatMessage: (projectId: number, message: string, isUser: boolean, isDesign: boolean) => ipcRenderer.invoke('add-chat-message', projectId, message, isUser, isDesign),
 });
 

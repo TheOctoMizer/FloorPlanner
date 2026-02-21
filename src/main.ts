@@ -4,7 +4,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey, getTheme, setTheme, createProject, deleteProject, getProjectById } from './db/database';
+import { initDB, getProjectList, getLLMProvider, setLLMProvider, getLLMProviderBaseUrl, setLLMProviderBaseUrl, getLLMProviderApiKey, setLLMProviderApiKey, getTheme, setTheme, createProject, deleteProject, getProjectById, getChatHistory, addChatMessage } from './db/database';
 
 
 import { logger } from './logger';
@@ -100,6 +100,13 @@ app.on('ready', () => {
     return getProjectById(id);
   });
 
+  ipcMain.handle('get-chat-history', async (_, projectId: number) => {
+    return getChatHistory(projectId);
+  });
+
+  ipcMain.handle('add-chat-message', async (_, projectId: number, message: string, isUser: boolean, isDesign: boolean) => {
+    return addChatMessage(projectId, message, isUser, isDesign);
+  });
 
 
   createWindow();

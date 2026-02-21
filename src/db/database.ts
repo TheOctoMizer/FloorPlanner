@@ -37,6 +37,15 @@ export function initDB() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );`,
+        `CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      project_id INTEGER NOT NULL,
+      content TEXT NOT NULL,
+      is_user INTEGER NOT NULL,
+      is_design INTEGER DEFAULT 0,
+      timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
     );`
     ];
     db.exec(createTableStatements.join('\n'));
@@ -191,3 +200,21 @@ export function setTheme(theme: ThemeType) {
     stmt.run('theme', theme);
 }
 
+export function getChatHistory(projectId: number) {
+    const db = getDB();
+    const stmt = db.prepare('SELECT content as message, is_user as isUser, is_design as isDesign, timestamp as timestamp FROM chat_messages WHERE project_id = ? ORDER BY id ASC');
+    const rows = stmt.all(projectId) as { message: string, isUser: number, isDesign: number, timestamp: string }[];
+
+    // Convert 0/1 back to booleans for the UI
+    return rows.map(row => ({
+        ...row,
+        isUser: !!row.isUser,
+        isDesign: !!row.isDesign
+    }));
+}
+
+export function addChatMessage(projectId: number, message: string, isUser: boolean, isDesign: boolean = false) {
+    const db = getDB();
+    const stmt = db.prepare('INSERT INTO chat_messages (project_id, content, is_user, is_design) VALUES (?, ?, ?, ?)');
+    stmt.run(projectId, message, isUser ? 1 : 0, isDesign ? 1 : 0);
+}

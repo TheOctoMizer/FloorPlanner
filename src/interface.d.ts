@@ -16,6 +16,9 @@ export interface IElectronAPI {
 
     deleteProject: (id: number) => Promise<void>;
     getProjectById: (id: number) => Promise<{ id: number, name: string } | undefined>;
+
+    getChatHistory: (projectId: number) => Promise<{ message: string, isUser: boolean, isDesign: boolean, timestamp: string }[]>;
+    addChatMessage: (projectId: number, message: string, isUser: boolean, isDesign: boolean) => Promise<void>;
 }
 
 
